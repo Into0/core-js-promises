@@ -76,8 +76,18 @@ function getFirstResolvedPromiseResult(/* promises */) {
  * [promise3, promise6, promise2] => Promise rejected with 2
  * [promise3, promise4, promise6] => Promise rejected with 6
  */
-function getFirstPromiseResult(/* promises */) {
-  throw new Error('Not implemented');
+function getFirstPromiseResult(promises) {
+  return new Promise((resolve, reject) => {
+    let rejectedCount = 0;
+    promises.forEach((promise) => {
+      promise.then(resolve).catch((error) => {
+        rejectedCount += 1;
+        if (rejectedCount === promises.length) {
+          reject(error);
+        }
+      });
+    });
+  });
 }
 
 /**
